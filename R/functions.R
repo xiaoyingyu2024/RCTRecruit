@@ -29,7 +29,6 @@ LoadData <- function(data, date, enrolled) {
   cat(msg)
 }
 
-
 #' Title Simulate number of weeks needed to recruit a given number of subjects
 #'
 #' @param nSub Number of subjects to recruit
