@@ -3,3 +3,4 @@
 comms_files
 *.Rproj
 .vscode
+.Rproj.user
