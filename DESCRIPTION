@@ -1,0 +1,19 @@
+Package: RCTRecruit
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: person( "Ioannis", "Malagaris", email = "iomalaga@utmb.edu", role = c("aut", "cre"))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.3.2
+LinkingTo: 
+    Rcpp
+Imports: 
+    lubridate,
+    Rcpp,
+    tis

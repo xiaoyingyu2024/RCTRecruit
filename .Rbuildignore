@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^code\.R$
+^LICENSE\.md$
+^dmultinc\.cpp$
+^data-raw$
