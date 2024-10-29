@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{simAllWt}
 \alias{simAllWt}
-\title{Title}
+\title{Title Simulate number of weeks needed to recruit a given number of subjects}
 \usage{
 simAllWt(nSub = 50L, fill_Gaps = FALSE, nSim = 10000L, startWeek = 1L)
 }
@@ -21,7 +21,7 @@ A list with two elements. The first element `weeks` is an integer
     simulation. The second `CI` shows the median and the 95%CI.
 }
 \description{
-Title
+Title Simulate number of weeks needed to recruit a given number of subjects
 }
 \examples{
 LoadData(gripsIM, ScreenDt, Enrolled)
