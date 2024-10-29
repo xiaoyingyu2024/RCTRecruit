@@ -1,19 +1,28 @@
-Package: RCTRecruit
 Type: Package
-Title: What the Package Does (Title Case)
+Package: RCTRecruit
+Title: Non-parametric Recruitment Prediction for Randomized ClinicalTrials
 Version: 0.1.0
-Authors@R: person( "Ioannis", "Malagaris", email = "iomalaga@utmb.edu", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person("Ioannis", "Malagaris", , "iomalaga@utmb.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-5126-2068")),
+    person("Alejandro", "Villasante-Tezanos", , "alvillas@utmb.edu", role = "aut"),
+    person("Christopher", "Kurinec", , "chkurine@utmb.edu", role = "aut"),
+    person("Xiaoying", "Yu", , "xiyu@utmb.edu", role = "aut")
+  )
+Description: Accurate prediction of subject recruitment for
+    randomizedclinical trials (RCT) remains anongoing challenge. Previous
+    predictionmodels rely on parametric assumptions. We present functions
+    fornon-parametric RCT recruitment prediction under several scenarios.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
 Depends: 
     R (>= 2.10)
-RoxygenNote: 7.3.2
-LinkingTo: 
-    Rcpp
 Imports: 
     lubridate,
     Rcpp,
     tis
+LinkingTo: 
+    Rcpp
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

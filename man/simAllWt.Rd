@@ -9,16 +9,16 @@ simAllWt(nSub = 50L, fill_Gaps = FALSE, nSim = 10000L, startWeek = 1L)
 \arguments{
 \item{nSub}{Number of subjects to recruit}
 
+\item{fill_Gaps}{Whether to fill gaps in the data}
+
 \item{nSim}{Number of simulations to run}
 
 \item{startWeek}{The week of the year to start from}
-
-\item{fillGaps}{Whether to fill gaps in the data}
 }
 \value{
-A list with two elements. The first element `weeks` is an integer
-    vector with length equal to `nSim` containing the results of the
-    simulation. The second `CI` shows the median and the 95%CI.
+A list with two elements. The first element \code{weeks} is an integer
+vector with length equal to \code{nSim} containing the results of the
+simulation. The second \code{CI} shows the median and the 95\%CI.
 }
 \description{
 Title Simulate number of weeks needed to recruit a given number of subjects

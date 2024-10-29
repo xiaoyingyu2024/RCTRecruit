@@ -4,12 +4,19 @@
 \name{RCTRecruit-package}
 \alias{RCTRecruit}
 \alias{RCTRecruit-package}
-\title{RCTRecruit: What the Package Does (Title Case)}
+\title{RCTRecruit: Non-parametric Recruitment Prediction for Randomized ClinicalTrials}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Accurate prediction of subject recruitment for randomizedclinical trials (RCT) remains anongoing challenge. Previous predictionmodels rely on parametric assumptions. We present functions fornon-parametric RCT recruitment prediction under several scenarios.
 }
 \author{
-\strong{Maintainer}: Ioannis Malagaris \email{iomalaga@utmb.edu}
+\strong{Maintainer}: Ioannis Malagaris \email{iomalaga@utmb.edu} (\href{https://orcid.org/0000-0001-5126-2068}{ORCID})
+
+Authors:
+\itemize{
+  \item Alejandro Villasante-Tezanos \email{alvillas@utmb.edu}
+  \item Christopher Kurinec \email{chkurine@utmb.edu}
+  \item Xiaoying Yu \email{xiyu@utmb.edu}
+}
 
 }
 \keyword{internal}

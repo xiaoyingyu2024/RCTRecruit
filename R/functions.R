@@ -21,8 +21,8 @@ LoadData <- function(data, date, enrolled) {
   the$datWeeks <- days2weeks()
   the$TrainVector <- the$datWeeks$enrolled
   the$Trainfilled <- fillGaps(the$TrainVector)
-  the$TrainVectorN <- setNames(the$TrainVector, the$datWeeks$week)
-  the$TrainfilledN <- setNames(the$Trainfilled, the$datWeeks$week)
+  the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)
+  the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
   enStr = fmt(enStr, 28, 0, 1)
   dtStr = fmt(dtStr, 28, 0, 1)
   msg = sprintf("'%s' and '%s' were successfully loaded", enStr, dtStr)
@@ -32,7 +32,7 @@ LoadData <- function(data, date, enrolled) {
 #' Title Simulate number of weeks needed to recruit a given number of subjects
 #'
 #' @param nSub Number of subjects to recruit
-#' @param fillGaps Whether to fill gaps in the data
+#' @param fill_Gaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
 #' @param startWeek The week of the year to start from
 #' @return A list with two elements. The first element `weeks` is an integer

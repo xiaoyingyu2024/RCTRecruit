@@ -1,0 +1,3 @@
+id,NAME, DESCRIPTION
+"\[,1\]",ScreenDt, character Calendar Date of the Screening
+"\[,2\]",Enrolled, integer   Number of new subjects enrolled in the study

@@ -22,7 +22,7 @@ checkInvalidValues <- function(x) {
 # Check if a variable exists in a data frame and return it
 checkArgs <- function(datStr, name) {
   dat <- get(datStr, parent.frame())
-  if (!hasName(dat, name)) {
+  if (!utils::hasName(dat, name)) {
     msg <- sprintf('"%s" not found in data = "%s"', name, datStr)
     stop(msg)
   }
@@ -99,14 +99,14 @@ days2weeks <- function() {
     year <- lubridate::isoyear(date)
     holiday <- tis::isHoliday(date, TRUE, TRUE) * 1
   })
-  dataWeeks <- aggregate(cbind(enrolled, holiday) ~ week + year, dat, sum)
-  dataWeeks$cnt <- 0L
-  dataWeeks$cnt <- cnt[dataWeeks$week]
-  if (dataWeeks$week[1L] == dataWeeks$week[nrow(dataWeeks)]) {
-    dataWeeks = dataWeeks[-1L, ]
-    rownames(dataWeeks) <- NULL
+  datw <- stats::aggregate(cbind(enrolled, holiday) ~ week + year, dat, sum)
+  datw$cnt <- 0L
+  datw$cnt <- cnt[datw$week]
+  if (datw$week[1L] == datw$week[nrow(datw)]) {
+    datw = datw[-1L, ]
+    rownames(datw) <- NULL
   }
-  return(dataWeeks)
+  return(datw)
 }
 
 # Unit simulation function

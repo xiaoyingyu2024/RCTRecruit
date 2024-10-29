@@ -1,3 +1,46 @@
+desc <- "Accurate prediction of subject recruitment for randomized clinical 
+trials (RCT) remains anongoing challenge. Previous prediction models rely on 
+parametric assumptions. We present functions for non-parametric RCT recruitment 
+prediction under several scenarios."
+
+def <- use_description_defaults("RCTrecruit", fields = list(
+  Title = "Non-parametric Recruitment Prediction for Randomized Clinical Trials",
+  Description = gsub("\\n", "", desc),
+  lazyData = TRUE,
+  Version = "0.1.0"
+))
+
+use_description(def)
+use_mit_license()
+use_package("Rcpp")
+use_package("Rcpp", type = "LinkingTo")
+use_package("tis")
+use_package("lubridate")
+
+aut <- c(
+  getOption("usethis.description")[[1]],
+  person("Alejandro", "Villasante-Tezanos", email = "alvillas@utmb.edu", 
+         role = c("aut")),
+  person("Christopher", "Kurinec", email = "chkurine@utmb.edu", role = c("aut")),
+  person("Xiaoying", "Yu", email = "xiyu@utmb.edu", role = c("aut"))
+)
+m <- read.dcf("DESCRIPTION") |> as.data.frame() |> lapply(\(x) gsub("\\n", "", x))
+m$`Authors@R` <- aut
+
+
+use_description(m)
+
+
+
+
+
+
+
+dpath <- system.file("DESCRIPTION", package = "accrual")
+
+read.dcf(dpath) |> as.data.frame() |> lapply(\(x) gsub("\\n", "", x))
+
+
 # library(tis)
 library(lubridate)
 
