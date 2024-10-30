@@ -7,4 +7,5 @@
 #' A data frame with 159 observations of 2 variables:
 #' @eval c("@format", genDataDoc(gripsIM))
 #' @source <https://github.com/imalagaris/RCTRecruit/tree/main/data>
+#' @references @eval c("@references", readCitationFile("inst/CITATION"))
 "gripsIM"

@@ -4,16 +4,16 @@
 \alias{simAllWt}
 \title{Title Simulate number of weeks needed to recruit a given number of subjects}
 \usage{
-simAllWt(nSub = 50L, fill_Gaps = FALSE, nSim = 10000L, startWeek = 1L)
+simAllWt(nSub = 50L, fill_gaps = FALSE, nSim = 10000L, startWK = 1L)
 }
 \arguments{
 \item{nSub}{Number of subjects to recruit}
 
-\item{fill_Gaps}{Whether to fill gaps in the data}
+\item{fill_gaps}{Whether to fill gaps in the data}
 
 \item{nSim}{Number of simulations to run}
 
-\item{startWeek}{The week of the year to start from}
+\item{startWK}{The week of the year to start from}
 }
 \value{
 A list with two elements. The first element \code{weeks} is an integer

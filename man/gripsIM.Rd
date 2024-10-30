@@ -23,4 +23,7 @@ Modified recruitment data from the GRIPS study for the first year the study
 was conducted. The data includes the number of participants recruited each
 for each calendar date the recruitment was active.
 }
+\references{
+References
+}
 \keyword{datasets}

@@ -12,8 +12,8 @@ LoadData <- function(data, date, enrolled) {
   dataStr <- the$dataStr <- deparse(substitute(data))
   the$enStr <- deparse(substitute(enrolled)) |> gsub(qReg, "\\2", x = _)
   the$dtStr <- deparse(substitute(date)) |> gsub(qReg, "\\2", x = _)
-  date <- checkArgs(dataStr, dtStr) |> fixDate()
-  enrolled <- checkArgs(dataStr, enStr) |> fixEnrolled()
+  date <- checkArgs(dataStr, the$dtStr) |> fixDate()
+  enrolled <- checkArgs(dataStr, the$enStr) |> fixEnrolled()
   the$raw <- data.frame(date, enrolled)
   the$datWeeks <- days2weeks()
   the$TrainVector <- the$datWeeks$enrolled
