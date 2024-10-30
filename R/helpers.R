@@ -2,7 +2,7 @@
 the <- new.env(parent = emptyenv())
 load("R/sysdata.rda")
 the$probs <- probs
-the$color = .Platform$GUI %in% c("RStudio", "RTerm")
+the$color <- .Platform$GUI %in% c("RStudio", "RTerm")
 
 # Check input is of correct type
 checkIntNumType <- function(x) {
@@ -50,9 +50,8 @@ fixDate <- function(dateVar) {
     ids <- which(NAs)
     len <- length(ids)
     ids <- ids[seq_len(min(10L, len))]
-    nn <-  deparse(substitute(dateVar))
     for (i in ids) {
-      msg = fmt(sprintf("%s[[%dL]]: %s", the$dtStr, i, dateVar[[i]]), bold = 7)
+      msg <- fmt(sprintf("%s[[%dL]]: %s", the$dtStr, i, dateVar[[i]]), bold = 7)
       warning(msg, call. = FALSE, immediate. = TRUE)
     }
     if (len > 10) warning("...")
@@ -73,9 +72,9 @@ fixEnrolled <- function(TrainVector) {
 days2weeks <- function() {
   date <- the$raw$date
   nn <- length(date)
-  gaps <- c(as.integer(diff(date)) -1L, 0L)
+  gaps <- c(as.integer(diff(date)) - 1L, 0L)
   slen <- seq_len(sum(gaps))
-  dlist = lapply(slen, \(x) list(date = NULL, enrolled = integer(1L)))
+  dlist <- lapply(slen, \(x) list(date = NULL, enrolled = integer(1L)))
   j <- 0L
   for (i in seq_len(nn)) {
     gap <- gaps[[i]]
@@ -87,23 +86,22 @@ days2weeks <- function() {
     }
   }
   cnt <- stats::setNames(integer(53L), seq_len(53L))
-  the$tab = tab <- table(lubridate::isoweek(date))
+  tab <- table(lubridate::isoweek(date))
   cnt[names(tab)] <- tab
-  the$cnt = cnt
-  
+
   dlist <- do.call(rbind.data.frame,  dlist)
   dat <- rbind(the$raw, dlist)
   dat <- dat[order(dat$date), ]
   dat <- within(dat, {
-    week <- lubridate::isoweek(date)
-    year <- lubridate::isoyear(date)
-    holiday <- tis::isHoliday(date, TRUE, TRUE) * 1
+    week <- lubridate::isoweek(date) # nolint: object_usage_linter.
+    year <- lubridate::isoyear(date) # nolint: object_usage_linter.
+    holiday <- tis::isHoliday(date, TRUE, TRUE) * 1L # nolint
   })
   datw <- stats::aggregate(cbind(enrolled, holiday) ~ week + year, dat, sum)
   datw$cnt <- 0L
   datw$cnt <- cnt[datw$week]
   if (datw$week[1L] == datw$week[nrow(datw)]) {
-    datw = datw[-1L, ]
+    datw <- datw[-1L, ]
     rownames(datw) <- NULL
   }
   return(datw)
@@ -112,11 +110,11 @@ days2weeks <- function() {
 # Unit simulation function
 # @param nsubjects Number of subjects to recruit
 # @return Number of Weeks required to recruit subjects
-sim1wt1 = function(nsubjects, startWeek = 1L) {
+sim1wt1 <- function(nsubjects, startWeek = 1L) {
   the <- the
   TrainVector <- the$finalVector
   probs <- the$probs
-  out = sim1(TrainVector, probs, nsubjects, startWeek)
+  out <- sim1(TrainVector, probs, nsubjects, startWeek)
   out
 }
 
@@ -132,18 +130,17 @@ fmt <- \(str, fg = 0, bk = 0, bold = NULL) {
       "\033[0m"
     )
     do.call(paste0, larg)
-  } else str
+  } else {
+    str
+  }
 }
 
 # Fill gap weeks with values sampled from non-zero weeks
 fillGaps <- function(x) {
-  zeroIdx = which(x == 0)
-  nonZeroVals = x[-zeroIdx]
+  zeroIdx <- which(x == 0)
+  nonZeroVals <- x[-zeroIdx]
   for (i in zeroIdx) {
-    x[i] = sample(nonZeroVals, 1)
+    x[i] <- sample(nonZeroVals, 1)
   }
   x
 }
-
-
-
