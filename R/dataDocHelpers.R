@@ -8,7 +8,7 @@ tabular <- function(df, ...) {
   argContents <- c(cols, list(sep = " \\tab ", collapse = "\\cr\n"))
   contents <- do.call("paste", argContents)
   paste(
-    "\\tabular{", paste(col_align, collapse = ""),  "}{\n",
+    "\\tabular{", paste(col_align, collapse = ""), "}{\n",
     contents, "\n}\n",
     sep = ""
   )
