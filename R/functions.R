@@ -45,3 +45,6 @@ simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
   CI <- stats::quantile(x = weeks, probs = c(.025, .5, .975))
   list(weeks = weeks, CI = CI)
 }
+
+
+

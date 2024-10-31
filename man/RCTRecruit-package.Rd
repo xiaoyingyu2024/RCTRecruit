@@ -6,7 +6,7 @@
 \alias{RCTRecruit-package}
 \title{RCTRecruit: Non-parametric Recruitment Prediction for Randomized ClinicalTrials}
 \description{
-Accurate prediction of subject recruitment forrandomizedclinical trials (RCT) remains anongoing challenge. Previouspredictionmodels rely on parametric assumptions. We present functionsfornon-parametric RCT recruitment prediction under several scenarios.
+Accurate prediction of subject recruitment for randomized clinical trials (RCT) remains anongoing challenge. Previous prediction models rely on parametric assumptions. We present functions for non-parametric RCT recruitment prediction under several scenarios.
 }
 \author{
 \strong{Maintainer}: Ioannis Malagaris \email{iomalaga@utmb.edu} (\href{https://orcid.org/0000-0001-5126-2068}{ORCID})

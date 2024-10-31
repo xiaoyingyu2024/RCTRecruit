@@ -29,11 +29,23 @@ m$`Authors@R` <- aut
 
 
 use_description(m)
+the$datWeeks
 
 
+LoadData(gripsIM, ScreenDt, Enrolled);
+datWeeks <- the$datWeeks
 
+labs <- list(
+  week = "Calendar week",
+  year = "Calendar year",
+  enrolled = "Number of people enrolled that week",
+  holiday = "Number of federal holidays that week",
+  cnt = "Number of days in that week when recruitment was active"
+)
 
-
+for (x in names(datWeeks)) {
+  attr(datWeeks[[x]], "Description") <- labs[[x]]
+}
 
 
 dpath <- system.file("DESCRIPTION", package = "accrual")
@@ -45,7 +57,7 @@ read.dcf(dpath) |> as.data.frame() |> lapply(\(x) gsub("\\n", "", x))
 library(lubridate)
 
 load_all()
-dfile <- "../../source/GRIPS code/GRIPS_log_by_day_with_gaps.csv"
+dfile <- "../R-package/source/GRIPS code/GRIPS_log_by_day_with_gaps.csv"
 gripsIM <- read.csv(dfile)
 gripsIM$N.Rows <- NULL
 names(gripsIM) <- c("ScreenDt", "Screened", "MetCriteria", "Enrolled")
