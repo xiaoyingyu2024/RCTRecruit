@@ -37,10 +37,10 @@ genDataDoc <- function(dat) {
   paste("\\tabular{llll}{\n", contents, "\n}\n", sep = "")
 }
 
-bibname <- \(x) paste0(citationPath, x, ".bib") 
+bibname <- \(x) paste0(citationPath, x, ".bib")
 
 addRef <- \(fname) {
-   bibname(fname) |> 
+  bibname(fname) |>
     bibtex::read.bib() |>
     utils:::format.bibentry()
 }
@@ -52,12 +52,16 @@ mendeley2bib <- \(fname) {
       write(ref[-2L], file = bibname(fname))
       bibs <- list.files(citationPath, "*\\.bib", full.names = TRUE)
       cat("\033[31m", bibs, "\033[0m\n", ref[-2L])
-    } else stop ("Wrong length")
-    } else stop("Invalid input")
+    } else {
+      stop("Wrong length")
+    }
+  } else {
+    stop("Invalid input")
+  }
 }
 
 readDesc <- function() {
-  read.dcf("DESCRIPTION") |> 
-    as.data.frame() |> 
+  read.dcf("DESCRIPTION") |>
+    as.data.frame() |>
     lapply(\(x) gsub("\\n", "", x))
 }
