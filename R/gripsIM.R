@@ -13,6 +13,7 @@
 #' @source `r addRef("Villasante2024")`
 #' @references
 #' 1. `r addRef("Villasante2024")`
-#' 1. `r addRef("Villasante2024")`
+#' 1. `r addRef("Gajewski2008")`
+#' 1. `r addRef("Jiang2015")`
 #' @md
 "gripsIM"
