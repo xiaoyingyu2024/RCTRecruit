@@ -2,6 +2,8 @@ if (interactive()) {
   suppressMessages(require(devtools))
 }
 
+source("tools/dataDocHelpers.R");
+
 options(
   Ncpus = 10L,
   usethis.description = list(
@@ -16,4 +18,4 @@ options(
   usethis.overwrite = TRUE
 )
 
-source("private/dataDocHelpers.R"); 
+

@@ -1,5 +1,5 @@
 # Setup variables
-citationPath = "private/citations/"
+citationPath = "tools/citations/"
 
 # https://jsta.rbind.io/blog/automated-roxygen-documentation-of-r-package-data/
 # modified from http://r-pkgs.had.co.nz/man.html
