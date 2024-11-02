@@ -68,19 +68,7 @@ read.dcf(dpath) |> as.data.frame() |> lapply(\(x) gsub("\\n", "", x))
 
 # (base::requireNamespace("knitr", quietly = TRUE)) {
 
-pckgs <- c("Rcpp", "devtools", "usethis", "knitr", "lubridate", "tis", "bibtex")
-chckpg <- \(x) !base::requireNamespace(x, quietly = TRUE)
-pckgs[pckgs |> sapply(chckpg)] |> 
-  (\(x) if (length(x)) install.packages(x, dependencies = TRUE))()
-if (!pkgbuild::has_rtools()) {
-  Rt <- "https://CRAN.R-project.org/bin/windows/Rtools/"
-  cat(cli::style_hyperlink(
-    text = paste("Please install Rtools from:", Rt, sep = "\n"),
-    url = Rt
-  ))
-  
-  
-}
+
 
 
 
