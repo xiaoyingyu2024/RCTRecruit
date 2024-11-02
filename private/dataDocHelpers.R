@@ -47,11 +47,11 @@ addRef <- \(fname) {
 
 mendeley2bib <- \(fname) {
   ref <- readClipboard()
-  if (grepl("^@article", ref[[1L]])) {
+  if (grepl("^@(article|Manual)", ref[[1L]])) {
     if (length(ref) > 4L) {
-      write(ref[-2L], file = bibname(fname))
+      write(ref, file = bibname(fname))
       bibs <- list.files(citationPath, "*\\.bib", full.names = TRUE)
-      cat("\033[31m", bibs, "\033[0m\n", ref[-2L])
+      cat("\033[31m", bibs, "\033[0m\n", ref)
     } else {
       stop("Wrong length")
     }

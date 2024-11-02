@@ -1,4 +1,4 @@
-#' Recruitment data for the GRIPS study `r dat <- gripsIM;`
+#' Data: Recruitment data for the GRIPS study `r dat <- gripsIM;`
 #'
 #' Modified recruitment data from the GRIPS study for the first year the study
 #' was conducted. The data includes the number of participants recruited each

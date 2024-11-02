@@ -3,7 +3,7 @@
 \docType{data}
 \name{gripsIM}
 \alias{gripsIM}
-\title{Recruitment data for the GRIPS study}
+\title{Data: Recruitment data for the GRIPS study}
 \format{
 A data frame with
 \strong{159} observations of
@@ -44,6 +44,11 @@ clinical trials with Bayesian posterior predictive distributions."
 \emph{Statistics in medicine}, \emph{27}, 2328-40. ISSN 0277-6715,
 doi:10.1002/sim.3128 \url{https://doi.org/10.1002/sim.3128},
 \url{http://www.ncbi.nlm.nih.gov/pubmed/17979152}.
+\item Jiang Y, Simon S, Mayo MS, Gajewski BJ (2015). "Modeling and validating
+Bayesian accrual models on clinical data and simulations using adaptive
+priors." \emph{Statistics in medicine}, \emph{34}, 613-29. ISSN 1097-0258,
+doi:10.1002/sim.6359 \url{https://doi.org/10.1002/sim.6359},
+\url{http://www.ncbi.nlm.nih.gov/pubmed/25376910\%20http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC4314351}.
 }
 }
 \keyword{datasets}

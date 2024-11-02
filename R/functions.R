@@ -1,4 +1,4 @@
-#' Load recruitment data
+#' Function: Load recruitment data
 #' @param data Main dataset
 #' @param date Date column
 #' @param enrolled Enrolled column
@@ -22,11 +22,11 @@ LoadData <- function(data, date, enrolled) {
   the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
   enStr <- fmt(the$enStr, 28, 0, 1)
   dtStr <- fmt(the$dtStr, 28, 0, 1)
-  msg <- sprintf("'%s' and '%s' were successfully loaded", enStr, dtStr)
-  cat(msg)
+  log("\n%s and %s were successfully loaded", enStr, dtStr)
 }
 
-#' Title Simulate number of weeks needed to recruit a given number of subjects
+#' Function: Simulate number of weeks needed to recruit a given number of
+#'     subjects
 #' @param nSub Number of subjects to recruit
 #' @param fill_gaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
@@ -43,5 +43,9 @@ simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
   the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
   weeks <- vapply(seq.int(nSim), function(x) sim1wt1(nSub, startWK), 0L)
   CI <- stats::quantile(x = weeks, probs = c(.025, .5, .975))
-  list(weeks = weeks, CI = CI)
+  n <- fmt(nSub, 28, 0, 1)
+  m <- fmt(CI[[2L]], 28, 0, 1)
+  log("Enrolling %s subjects requires %s weeks\n\n", n, m)
+  print(round(CI))
+  invisible(list(weeks = weeks, CI = CI))
 }

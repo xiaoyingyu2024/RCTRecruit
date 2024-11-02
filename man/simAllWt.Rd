@@ -2,7 +2,8 @@
 % Please edit documentation in R/functions.R
 \name{simAllWt}
 \alias{simAllWt}
-\title{Title Simulate number of weeks needed to recruit a given number of subjects}
+\title{Function: Simulate number of weeks needed to recruit a given number of
+subjects}
 \usage{
 simAllWt(nSub = 50L, fill_gaps = FALSE, nSim = 10000L, startWK = 1L)
 }
@@ -21,7 +22,8 @@ vector with length equal to \code{nSim} containing the results of the
 simulation. The second \code{CI} shows the median and the 95\%CI.
 }
 \description{
-Title Simulate number of weeks needed to recruit a given number of subjects
+Function: Simulate number of weeks needed to recruit a given number of
+subjects
 }
 \examples{
 LoadData(gripsIM, ScreenDt, Enrolled)

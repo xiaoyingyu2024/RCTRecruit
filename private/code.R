@@ -36,7 +36,7 @@ aut <- c(
 
 m <- read.dcf("DESCRIPTION") |>
   as.data.frame() |>
-  lapply(\(x) gsub("\\n", "", x))
+  lapply(\(x) gsub("\\n", " ", x))
 m$`Authors@R` <- aut
 
 
@@ -138,3 +138,7 @@ sel <- function(trained, drop = FALSE) {
   assign("score", score, envir = globalenv())
   names(trained)[order(score, trained, decreasing = TRUE)]
 }
+
+
+
+

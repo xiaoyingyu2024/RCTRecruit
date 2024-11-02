@@ -4,6 +4,33 @@ load("R/sysdata.rda")
 the$probs <- probs
 the$color <- .Platform$GUI %in% c("RStudio", "RTerm")
 
+log <- \(x, ...) do.call(sprintf, c(x, list(...))) |> cat()
+err <- \(x, ...) do.call(sprintf, c(x, list(...))) |> stop(call. = FALSE)
+wrn <- \(x, ...) do.call(sprintf, c(x, list(...))) |> 
+  warning(call. = FALSE, immediate. = TRUE)
+
+
+isMarkdown <- \() {
+  if (base::requireNamespace("knitr", quietly = TRUE)) {
+    knitr::is_html_output() || knitr::is_html_output() 
+  } else {
+    FALSE
+  }
+}
+
+# Utility to colorize text
+fmt <- \(str, fg = 0, bk = 0, bold = NULL) {
+  if (!the$color || isMarkdown()) return(str)
+  larg <- list(
+    if (is.null(bold)) bold else sprintf("\033[%sm", bold),
+    if (fg) sprintf("\033[38;5;%sm", fg) else NULL,
+    if (bk) sprintf("\033[48;5;%sm", bk) else NULL,
+    str,
+    "\033[0m"
+  )
+  do.call(paste0, larg)
+}
+
 # Check input is of correct type
 checkIntNumType <- function(x) {
   if (is.null(x)) stop("x is NULL")
@@ -23,8 +50,9 @@ checkInvalidValues <- function(x) {
 checkArgs <- function(datStr, name) {
   dat <- get(datStr, parent.frame())
   if (!utils::hasName(dat, name)) {
-    msg <- sprintf('"%s" not found in data = "%s"', name, datStr)
-    stop(msg)
+    nams <- lapply(c(name, datStr), fmt, 160, bold= "1;4")
+    do.call(log, c("%s not found in data = %s\n", nams))
+    stop("invalid input", call. = FALSE)
   }
   dat[[name]]
 }
@@ -34,12 +62,11 @@ fixDate <- function(dateVar) {
   if (is.null(dateVar)) stop("strDate is NULL")
   type <- typeof(dateVar)
   if (type == "character") {
-    fmt <- c(
-      "Ymd", "Ymd HM",  "Ymd HMS",
-      "mdY", "mdY IMp", "mdY IMSp",
-      "dmY", "dmY HM",  "dmY HMS"
+    fmtDate <- c(
+      "Ymd", "Ymd HM", "Ymd HMS", "mdY", "mdY IMp", 
+      "mdY IMSp", "dmY", "dmY HM", "dmY HMS"
     )
-    out <- dateVar |> lubridate::parse_date_time(fmt) |> as.Date()
+    out <- dateVar |> lubridate::parse_date_time(fmtDate) |> as.Date()
   } else if (type %in% c("integer", "numeric", "double")) {
     out <- as.Date(dateVar, origin = "1970-01-01")
   } else {
@@ -50,12 +77,13 @@ fixDate <- function(dateVar) {
     ids <- which(NAs)
     len <- length(ids)
     ids <- ids[seq_len(min(10L, len))]
+    msg <- "%s[[%sL]]: %s"
     for (i in ids) {
-      msg <- fmt(sprintf("%s[[%dL]]: %s", the$dtStr, i, dateVar[[i]]), bold = 7)
-      warning(msg, call. = FALSE, immediate. = TRUE)
+      vals <- c(msg, lapply(c(the$dtStr, i, dateVar[[i]]), fmt, 208))
+      do.call(wrn, vals)
     }
     if (len > 10) warning("...")
-    stop(fmt(sprintf("Cannot parse %d date(s)", len), bold = 7), call. = FALSE)
+    stop("Invalid date values")
   }
   out[order(out)]
 }
@@ -118,23 +146,6 @@ sim1wt1 <- function(nsubjects, startWeek = 1L) {
   out
 }
 
-# Utility to colorize text
-fmt <- \(str, fg = 0, bk = 0, bold = NULL) {
-  if (the$color) {
-    if (fg == bk && bk == 0 && is.null(bold)) return(str)
-    larg <- list(
-      if (is.null(bold)) bold else sprintf("\033[%sm", bold),
-      if (fg) sprintf("\033[38;5;%sm", fg) else NULL,
-      if (bk) sprintf("\033[48;5;%sm", bk) else NULL,
-      str,
-      "\033[0m"
-    )
-    do.call(paste0, larg)
-  } else {
-    str
-  }
-}
-
 # Fill gap weeks with values sampled from non-zero weeks
 fillGaps <- function(x) {
   zeroIdx <- which(x == 0)
@@ -144,3 +155,9 @@ fillGaps <- function(x) {
   }
   x
 }
+
+
+
+
+
+
