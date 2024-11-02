@@ -6,21 +6,12 @@
 \title{Data: Recruitment data for the GRIPS study}
 \format{
 A data frame with
-\strong{159} observations of
-\strong{2} variables:
-\tabular{llll}{
-[,1] \tab ScreenDt \tab \code{character} \tab Calendar date of the screening process for recruitment in the study\cr
-[,2] \tab Enrolled \tab \code{integer} \tab Number of new subjects enrolled in the study
-}
+\strong{\verb{r nrow(dat)}} observations of
+\strong{\verb{r length(dat)}} variables:
+\verb{r genDataDoc(dat)}
 }
 \source{
-Villasante-Tezanos A, Kuo Y, Kurinec C, Li Y, Yu X (2024). "A
-non-parametric approach to predict the recruitment for randomized
-clinical trials: an example in elderly inpatient settings." \emph{BMC
-medical research methodology}, \emph{24}, 189. ISSN 1471-2288,
-doi:10.1186/s12874-024-02314-2
-\url{https://doi.org/10.1186/s12874-024-02314-2},
-\url{http://www.ncbi.nlm.nih.gov/pubmed/39210285\%20http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC11363376}.
+\verb{r addRef("Villasante2024")}
 }
 \usage{
 gripsIM
@@ -32,23 +23,9 @@ for each calendar date the recruitment was active.
 }
 \references{
 \enumerate{
-\item Villasante-Tezanos A, Kuo Y, Kurinec C, Li Y, Yu X (2024). "A
-non-parametric approach to predict the recruitment for randomized
-clinical trials: an example in elderly inpatient settings." \emph{BMC
-medical research methodology}, \emph{24}, 189. ISSN 1471-2288,
-doi:10.1186/s12874-024-02314-2
-\url{https://doi.org/10.1186/s12874-024-02314-2},
-\url{http://www.ncbi.nlm.nih.gov/pubmed/39210285\%20http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC11363376}.
-\item Gajewski BJ, Simon SD, Carlson SE (2008). "Predicting accrual in
-clinical trials with Bayesian posterior predictive distributions."
-\emph{Statistics in medicine}, \emph{27}, 2328-40. ISSN 0277-6715,
-doi:10.1002/sim.3128 \url{https://doi.org/10.1002/sim.3128},
-\url{http://www.ncbi.nlm.nih.gov/pubmed/17979152}.
-\item Jiang Y, Simon S, Mayo MS, Gajewski BJ (2015). "Modeling and validating
-Bayesian accrual models on clinical data and simulations using adaptive
-priors." \emph{Statistics in medicine}, \emph{34}, 613-29. ISSN 1097-0258,
-doi:10.1002/sim.6359 \url{https://doi.org/10.1002/sim.6359},
-\url{http://www.ncbi.nlm.nih.gov/pubmed/25376910\%20http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC4314351}.
+\item \verb{r addRef("Villasante2024")}
+\item \verb{r addRef("Gajewski2008")}
+\item \verb{r addRef("Jiang2015")}
 }
 }
 \keyword{datasets}
