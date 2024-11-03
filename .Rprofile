@@ -1,22 +1,18 @@
 local({
   pckgs <- c("Rcpp", "devtools", "usethis", "knitr", "lubridate", "tis", "bibtex")
   chckpg <- \(x) !base::requireNamespace(x, quietly = TRUE)
-  pckgs[pckgs |> sapply(chckpg)] |> 
-    (\(x) if (length(x)) install.packages(x, dependencies = TRUE))()
-  if (!pkgbuild::has_rtools()) {
-    Rt <- "https://CRAN.R-project.org/bin/windows/Rtools/"
-    cat("\tPlease, click to install Rtools:\n\t\033[32m", 
-        cli::style_hyperlink(text = Rt, url = Rt)
+  if (length(pckgs[pckgs |> sapply(chckpg)])) {
+    cat(
+      "\n\n\033[32mPlease, execute in console the following command:\n",
+      '\033[1;31m  source("setup.R")'
     )
   }
 })
 
-
-
-if (interactive()) {
-  suppressMessages(require(devtools))
+if (base::requireNamespace("devtools", quietly = TRUE)) {
+  if (interactive()) {
+    suppressMessages(require(devtools))
+  }
+  source("tools/dataDocHelpers.R");
+  options( usethis.overwrite = TRUE )
 }
-source("tools/dataDocHelpers.R");
-options( usethis.overwrite = TRUE )
-
-
