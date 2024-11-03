@@ -9,20 +9,19 @@ err <- \(x, ...) do.call(sprintf, c(x, list(...))) |> stop(call. = FALSE)
 wrn <- \(x, ...) do.call(sprintf, c(x, list(...))) |> 
   warning(call. = FALSE, immediate. = TRUE)
 
-
 isMarkdown <- \() {
   if (base::requireNamespace("knitr", quietly = TRUE)) {
-    knitr::is_html_output() || knitr::is_html_output() 
+    knitr::is_html_output() || knitr::is_latex_output() 
   } else {
     FALSE
   }
 }
 
 # Utility to colorize text
-fmt <- \(str, fg = 0, bk = 0, bold = NULL) {
+fmt <- \(str, fg = 0, bk = 0, fx = NULL) {
   if (!the$color || isMarkdown()) return(str)
   larg <- list(
-    if (is.null(bold)) bold else sprintf("\033[%sm", bold),
+    if (is.null(fx)) fx else sprintf("\033[%sm", fx),
     if (fg) sprintf("\033[38;5;%sm", fg) else NULL,
     if (bk) sprintf("\033[48;5;%sm", bk) else NULL,
     str,
@@ -50,7 +49,7 @@ checkInvalidValues <- function(x) {
 checkArgs <- function(datStr, name) {
   dat <- get(datStr, parent.frame())
   if (!utils::hasName(dat, name)) {
-    nams <- lapply(c(name, datStr), fmt, 160, bold= "1;4")
+    nams <- lapply(c(name, datStr), fmt, 160, 0, "1;4")
     do.call(log, c("%s not found in data = %s\n", nams))
     stop("invalid input", call. = FALSE)
   }
@@ -121,17 +120,14 @@ days2weeks <- function() {
   dat <- rbind(the$raw, dlist)
   dat <- dat[order(dat$date), ]
   dat <- within(dat, {
-    week <- lubridate::isoweek(date) # nolint: object_usage_linter.
-    year <- lubridate::isoyear(date) # nolint: object_usage_linter.
+    week <- lubridate::week(date) # nolint: object_usage_linter.
+    year <- lubridate::year(date) # nolint: object_usage_linter.
     holiday <- tis::isHoliday(date, TRUE, TRUE) * 1L # nolint
   })
   datw <- stats::aggregate(cbind(enrolled, holiday) ~ week + year, dat, sum)
   datw$cnt <- 0L
   datw$cnt <- cnt[datw$week]
-  if (datw$week[1L] == datw$week[nrow(datw)]) {
-    datw <- datw[-1L, ]
-    rownames(datw) <- NULL
-  }
+  rownames(datw) <- NULL
   return(datw)
 }
 
@@ -147,8 +143,8 @@ sim1wt1 <- function(nsubjects, startWeek = 1L) {
 }
 
 # Fill gap weeks with values sampled from non-zero weeks
-fillGaps <- function(x) {
-  zeroIdx <- which(x == 0)
+fillGaps <- function(x, id0) {
+  zeroIdx <- which(id0 == 0)
   nonZeroVals <- x[-zeroIdx]
   for (i in zeroIdx) {
     x[i] <- sample(nonZeroVals, 1)

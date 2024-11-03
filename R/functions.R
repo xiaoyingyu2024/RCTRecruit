@@ -17,7 +17,7 @@ LoadData <- function(data, date, enrolled) {
   the$raw <- data.frame(date, enrolled)
   the$datWeeks <- days2weeks()
   the$TrainVector <- the$datWeeks$enrolled
-  the$Trainfilled <- fillGaps(the$TrainVector)
+  the$Trainfilled <- fillGaps(the$TrainVector, the$datWeeks$cnt)
   the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)
   the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
   enStr <- fmt(the$enStr, 28, 0, 1)
@@ -37,7 +37,7 @@ LoadData <- function(data, date, enrolled) {
 #' @export
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
-#' simAllWt(50L)
+#' res <- simAllWt(50L)
 simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
   the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector

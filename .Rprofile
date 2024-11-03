@@ -4,7 +4,7 @@ local({
   if (length(pckgs[pckgs |> sapply(chckpg)])) {
     cat(
       "\n\n\033[32mPlease, execute in console the following command:\n",
-      '\033[1;31m  source("setup.R")'
+      '\033[1;31m  source("tools/setup.R")'
     )
   }
 })

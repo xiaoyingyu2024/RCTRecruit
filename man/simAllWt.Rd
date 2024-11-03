@@ -27,5 +27,5 @@ subjects
 }
 \examples{
 LoadData(gripsIM, ScreenDt, Enrolled)
-simAllWt(50L)
+res <- simAllWt(50L)
 }
