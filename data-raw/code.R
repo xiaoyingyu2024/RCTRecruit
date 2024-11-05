@@ -98,7 +98,8 @@ rownames(gripsYR1) <- NULL
 gripsYR2 <- grips[grips$ScreenDt >= minDtyr2 & grips$ScreenDt <= maxDtyr2, ]
 rownames(gripsYR2) <- NULL
 
-yr2Cum <- with(gripsYR2, days2weeks(ScreenDt, Enrolled))$enrolled |> cumsum() 
+yr2 <- with(gripsYR2, days2weeks(ScreenDt, Enrolled))$enrolled 
+
 
 
 

@@ -37,12 +37,35 @@ IntegerVector getPredVec(IntegerVector x, List probs) {
 }
 
 // [[Rcpp::export]]
-double getPredVec2(IntegerVector x, IntegerVector y, List probs) {
+double getDistance(IntegerVector x, IntegerVector y, List probs) {
   IntegerVector pred = cumsum(getPredVec(x, probs));
   IntegerVector pred1 = pred - y; 
   NumericVector pred2 = pow(pred1, 2);
-  int pred3 = sum(pred2);
+  double pred3 = sum(pred2);
   return sqrt(pred3);
 }
+
+
+// [[Rcpp::export]]
+List PredCIbyWk(IntegerVector x, List probs, int nSim, NumericVector pq) {
+  IntegerVector y(nSim);
+  List out(52);
+  Environment stats("package:stats");
+  Function quantile = stats["quantile"];
+  int npr = pq.size();
+  NumericVector q(npr);
+  for (int i = 0; i < 52; i++) {
+    sugar::probs_t prob = probs[i];
+    NumericVector p = clone(prob.get());
+    IntegerVector idx = sugar::SampleReplace(p, 52, nSim, false);
+    IntegerVector y1 = x[idx];
+    y = y + y1;
+    q = quantile(y, pq);
+    out[i] = q;
+  }
+  return out;
+}
+
+
 
 

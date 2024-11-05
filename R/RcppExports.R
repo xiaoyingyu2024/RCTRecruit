@@ -9,7 +9,11 @@ getPredVec <- function(x, probs) {
     .Call(`_RCTRecruit_getPredVec`, x, probs)
 }
 
-getPredVec2 <- function(x, y, probs) {
-    .Call(`_RCTRecruit_getPredVec2`, x, y, probs)
+getDistance <- function(x, y, probs) {
+    .Call(`_RCTRecruit_getDistance`, x, y, probs)
+}
+
+PredCIbyWk <- function(x, probs, nSim, pq) {
+    .Call(`_RCTRecruit_PredCIbyWk`, x, probs, nSim, pq)
 }
 
