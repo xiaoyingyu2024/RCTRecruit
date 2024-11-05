@@ -96,44 +96,6 @@ fixEnrolled <- function(TrainVector) {
 }
 
 # Aggregate the data by week
-# days2weeks <- function() {
-#   date <- the$raw$date
-#   nn <- length(date)
-#   gaps <- c(as.integer(diff(date)) - 1L, 0L)
-#   slen <- seq_len(sum(gaps))
-#   dlist <- lapply(slen, \(x) list(date = NULL, enrolled = integer(1L)))
-#   j <- 0L
-#   for (i in seq_len(nn)) {
-#     gap <- gaps[[i]]
-#     if (gap) {
-#       for (k in seq_len(gap)) {
-#         j <- j + 1L
-#         dlist[[j]][["date"]] <- date[[i]] + k
-#       }
-#     }
-#   }
-#   cnt <- stats::setNames(integer(53L), seq_len(53L))
-#   tab <- table(lubridate::isoweek(date))
-#   cnt[names(tab)] <- tab
-# 
-#   dlist <- do.call(rbind.data.frame,  dlist)
-#   dat <- rbind(the$raw, dlist)
-#   dat <- dat[order(dat$date), ]
-#   dat <- within(dat, {
-#     week <- lubridate::isoweek(date) # nolint: object_usage_linter.
-#     year <- lubridate::isoyear(date) # nolint: object_usage_linter.
-#     holiday <- tis::isHoliday(date, TRUE, TRUE) * 1L # nolint
-#   })
-#   datw <- stats::aggregate(cbind(enrolled, holiday) ~ week + year, dat, sum)
-#   datw$cnt <- 0L
-#   datw$cnt <- cnt[datw$week]
-#   rownames(datw) <- NULL
-#   
-#   return(datw[1L:52L, ])
-# }
-
-
-# Aggregate the data by week
 #' @export
 days2weeks <- function(date, enrolled) {
   dat <- data.frame(date, enrolled);

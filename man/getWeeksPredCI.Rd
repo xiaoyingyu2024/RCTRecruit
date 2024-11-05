@@ -12,7 +12,7 @@ getWeeksPredCI(nSim = 10000L, fill_gaps = FALSE)
 \item{fill_gaps}{Whether to fill gaps in the data}
 }
 \value{
-A 52x3 matrix with the 2.5\%, 50\% and 97.5\% percentiles for each week
+An 52x3 matrix with the 2.5\%, 50\% and 97.5\% percentiles for each week
 }
 \description{
 Function: Calculate median recruitment with CI for the next 52 weeks

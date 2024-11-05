@@ -80,7 +80,7 @@ simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
 #' Function: Calculate median recruitment with CI for the next 52 weeks
 #' @param fill_gaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
-#' @return A 52x3 matrix with the 2.5%, 50% and 97.5% percentiles for each week  
+#' @return An 52x3 matrix with the 2.5%, 50% and 97.5% percentiles for each week  
 #' @export
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
