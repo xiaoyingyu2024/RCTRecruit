@@ -134,6 +134,7 @@ fixEnrolled <- function(TrainVector) {
 
 
 # Aggregate the data by week
+#' @export
 days2weeks <- function(date, enrolled) {
   dat <- data.frame(date, enrolled);
   nn <- length(date)

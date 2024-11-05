@@ -49,7 +49,20 @@ simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
   print(round(CI))
   invisible(list(weeks = weeks, CI = CI))
 }
-
+#' Function: Calculate CI of Euclidean distance of predicted recruitment with
+#'     actual recruitment
+#' @param target A vector with the actual recruitment by week
+#' @param fill_gaps Whether to fill gaps in the data
+#' @param nSim Number of simulations to run
+#' @return A list with two elements. The first element `dist` is a numeric
+#'     vector with length equal to `nSim` containing the simulated Euclidean
+#'     distance. The second `CI` shows the median and the 95%CI Euclidean 
+#'     distance.
+#' @export
+#' @examples
+#' LoadData(gripsIM, ScreenDt, Enrolled)
+#' target <- days2weeks(gripsYR2$ScreenDt, gripsYR2$Enrolled)$enrolled
+#' res <- simDistance(target)
 simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
   the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
@@ -64,6 +77,14 @@ simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
   invisible(list(dist = dist, CI = CI))
 }
 
+#' Function: Calculate median recruitment with CI for the next 52 weeks
+#' @param fill_gaps Whether to fill gaps in the data
+#' @param nSim Number of simulations to run
+#' @return A 52x3 matrix with the 2.5%, 50% and 97.5% percentiles for each week  
+#' @export
+#' @examples
+#' LoadData(gripsIM, ScreenDt, Enrolled)
+#' getWeeksPredCI()
 getWeeksPredCI <- function(nSim = 1e4L, fill_gaps = FALSE) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
   vec = the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
