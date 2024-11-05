@@ -15,7 +15,7 @@ LoadData <- function(data, date, enrolled) {
   date <- checkArgs(dataStr, the$dtStr) |> fixDate()
   enrolled <- checkArgs(dataStr, the$enStr) |> fixEnrolled()
   the$raw <- data.frame(date, enrolled)
-  the$datWeeks <- days2weeks()
+  the$datWeeks <- days2weeks(date, enrolled);
   the$TrainVector <- the$datWeeks$enrolled
   the$Trainfilled <- fillGaps(the$TrainVector, the$datWeeks$cnt)
   the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)

@@ -17,8 +17,6 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
 Imports: 
-    cli,
-    htmltools,
     knitr,
     lubridate,
     Rcpp,

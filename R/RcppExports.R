@@ -5,3 +5,11 @@ sim1 <- function(x, probs, nSubjects, startWeek = 1L) {
     .Call(`_RCTRecruit_sim1`, x, probs, nSubjects, startWeek)
 }
 
+getPredVec <- function(x, probs) {
+    .Call(`_RCTRecruit_getPredVec`, x, probs)
+}
+
+getPredVec2 <- function(x, y, probs) {
+    .Call(`_RCTRecruit_getPredVec2`, x, y, probs)
+}
+
