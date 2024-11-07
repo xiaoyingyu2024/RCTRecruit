@@ -1,8 +1,15 @@
 # Initial setup
+Rcpp::loadModule(module = "mod", TRUE)
 the <- new.env(parent = emptyenv())
 load("R/sysdata.rda")
-the$probs <- probs
+# the$probs <- probs
+the$probs = the$binomWt <- wts[["binomial"]]
+the$cauchyWt <- wts[["cauchy"]] 
 the$color <- .Platform$GUI %in% c("RStudio", "RTerm")
+
+useFilled <- function(fill = FALSE, env = the) {
+  the$cpp$train = env$train <- if (fill) env$Trainfilled else env$TrainVector
+}
 
 log <- \(x, ...) do.call(sprintf, c(x, list(...))) |> cat()
 err <- \(x, ...) do.call(sprintf, c(x, list(...))) |> stop(call. = FALSE)
@@ -133,16 +140,12 @@ days2weeks <- function(date, enrolled) {
   return(datw[1L:52L, ])
 }
 
-
-
-
-
 # Unit simulation function
 # @param nsubjects Number of subjects to recruit
 # @return Number of Weeks required to recruit subjects
 sim1wt1 <- function(nsubjects, startWeek = 1L) {
   the <- the
-  TrainVector <- the$finalVector
+  TrainVector <- the$train
   probs <- the$probs
   out <- sim1(TrainVector, probs, nsubjects, startWeek)
   out

@@ -16,10 +16,11 @@ LoadData <- function(data, date, enrolled) {
   enrolled <- checkArgs(dataStr, the$enStr) |> fixEnrolled()
   the$raw <- data.frame(date, enrolled)
   the$datWeeks <- days2weeks(date, enrolled);
-  the$TrainVector <- the$datWeeks$enrolled
+  the$train = the$TrainVector <- the$datWeeks$enrolled
   the$Trainfilled <- fillGaps(the$TrainVector, the$datWeeks$cnt)
   the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)
   the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
+  the$cpp <- new(rct, the);
   enStr <- fmt(the$enStr, 28, 0, 1)
   dtStr <- fmt(the$dtStr, 28, 0, 1)
   log("\n%s and %s were successfully loaded", enStr, dtStr)
@@ -40,7 +41,7 @@ LoadData <- function(data, date, enrolled) {
 #' res <- simAllWt(50L)
 simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
+  the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
   weeks <- vapply(seq.int(nSim), function(x) sim1wt1(nSub, startWK), 0L)
   CI <- stats::quantile(x = weeks, probs = c(.025, .5, .975))
   n <- fmt(nSub, 28, 0, 1)
@@ -65,12 +66,12 @@ simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
 #' res <- simDistance(target)
 simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
-  len <- length(the$finalVector)
+  the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
+  len <- length(the$train)
   if (length(target) < len) stop("target is smaller")
   if (length(target) > len) target <- target[seq.int(len)]
   target <- cumsum(target);
-  dummyFun <- \(x) getDistance(the$finalVector, target, the$probs)
+  dummyFun <- \(x) getDistance(the$train, target, the$probs)
   dist <- vapply(seq.int(nSim), dummyFun , numeric(1L), USE.NAMES = FALSE)
   CI <- stats::quantile(x = dist, probs = c(.025, .5, .975))
   print(round(CI))
@@ -87,11 +88,10 @@ simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
 #' getWeeksPredCI()
 getWeeksPredCI <- function(nSim = 1e4L, fill_gaps = FALSE) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  vec = the$finalVector <- if (fill_gaps) the$Trainfilled else the$TrainVector
-  out = PredCIbyWk(vec, the$probs, nSim, c(0.025, 0.5, 0.975))
+  useFilled(fill_gaps)
+  vec = the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
+  out = PredCIbyWk(the$train, the$probs, nSim, c(0.025, 0.5, 0.975))
   round(do.call(rbind, out))
 }
-
-
 
 

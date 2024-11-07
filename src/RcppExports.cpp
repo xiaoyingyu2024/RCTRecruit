@@ -64,11 +64,14 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _rcpp_module_boot_mod();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_RCTRecruit_sim1", (DL_FUNC) &_RCTRecruit_sim1, 4},
     {"_RCTRecruit_getPredVec", (DL_FUNC) &_RCTRecruit_getPredVec, 2},
     {"_RCTRecruit_getDistance", (DL_FUNC) &_RCTRecruit_getDistance, 3},
     {"_RCTRecruit_PredCIbyWk", (DL_FUNC) &_RCTRecruit_PredCIbyWk, 4},
+    {"_rcpp_module_boot_mod", (DL_FUNC) &_rcpp_module_boot_mod, 0},
     {NULL, NULL, 0}
 };
 
