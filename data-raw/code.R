@@ -163,5 +163,28 @@ sel <- function(trained, drop = FALSE) {
 }
 
 
+target <- days2weeks(gripsYR2$ScreenDt, gripsYR2$Enrolled)$enrolled |> cumsum()
+
+
+x <- 0:52;
+len <- length(x)
+xs <- c(x, x[len], rev(x[-len]))
+ys <- c(bn[, 3], bn[len, 1], rev(bn[-len, 1]))
+
+par(fin = c(6, 6), las = 1, cex.axis = 1.2);
+plot(0:52, c(0, target), type = "n", asp = 1, xlab = "Weeks", ylab = "Subjects")
+polygon(xs, ys, col = "gray90", border = "gray90")
+abline(v = seq(0, 50, by = 5), h = seq(0, 40, by = 10), col = "gray70")
+lines(0:52, bn[, 2], lwd = 2)
+lines(0:52, c(0, cumsum(the$TrainVector)), col = "blue", lwd = 2)
+lines(0:52, c(0, target), col = "red", lwd = 2)
+
+
+
+
+
+
+
+
 
 

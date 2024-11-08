@@ -3,6 +3,7 @@ Rcpp::loadModule(module = "mod", TRUE)
 the <- new.env(parent = emptyenv())
 load("R/sysdata.rda")
 # the$probs <- probs
+
 the$probs = the$binomWt <- wts[["binomial"]]
 the$cauchyWt <- wts[["cauchy"]] 
 the$color <- .Platform$GUI %in% c("RStudio", "RTerm")
@@ -161,7 +162,44 @@ fillGaps <- function(x, id0) {
   x
 }
 
+refill <- function() {
+  pre <- sum(the$Trainfilled);
+  zeroIdx <- which(the$datWeeks$cnt == 0)
+  nonZeroVals <- the$TrainVector[-zeroIdx]
+  for (i in zeroIdx) {
+    the$Trainfilled[i] <- sample(nonZeroVals, 1)
+  }
+  post <- sum(the$Trainfilled);
+  cat(pre, "->", post, "\n")
+}
 
+logPrint <- \(x) {
+  print(x) |>
+    capture.output() |>
+    cat(... = _, "", sep = "\n")
+}
+
+
+
+PredCI <- \(nSim = 1e4L, fill_gaps = FALSE, cauchyWt = FALSE) {
+  if (is.null(the$TrainVector)) stop("TrainVector not loaded")
+  useFilled(fill_gaps)
+  the$cpp$useCauchy(cauchyWt)
+  out <- the$cpp$PredCIbyWk(nSim) |> rbind(rep(0, 3), ... = _)
+  rownames(out) <- 0:(nrow(out) - 1)
+  head(out) |> logPrint();
+  tail(out) |> logPrint();
+  invisible(out);
+}
+
+
+
+# low = high <- gripsIM$ScreenDt[1] |> as.Date()
+# lubridate::year(high) = lubridate::year(high) + 1
+# high = high - 1
+# 
+# ref <- lubridate::year(low) |> paste(... = _, 1, 1, sep = "-") |> as.Date()
+# wks <- (low:high - ref:ref) %/% 7 %% 53 + 1
 
 
 

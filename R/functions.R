@@ -94,4 +94,5 @@ getWeeksPredCI <- function(nSim = 1e4L, fill_gaps = FALSE) {
   round(do.call(rbind, out))
 }
 
-
+#' @export
+b <- \(nSim=1e4, nSub=50) the$cpp$weeks2Nsubjects(nSim, nSub)
