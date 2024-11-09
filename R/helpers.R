@@ -1,12 +1,21 @@
 # Initial setup
-Rcpp::loadModule(module = "mod", TRUE)
 the <- new.env(parent = emptyenv())
+Rcpp::loadModule(module = "mod", TRUE, env =  environment())
 load("R/sysdata.rda")
-# the$probs <- probs
-
 the$probs = the$binomWt <- wts[["binomial"]]
 the$cauchyWt <- wts[["cauchy"]] 
 the$color <- .Platform$GUI %in% c("RStudio", "RTerm")
+
+exportModuleMethods <- \(instance) {
+  cl <- substitute(instance);
+  if (!methods::is(the$cpp, "Rcpp_rct")) stop("For internal use only")
+  mn <- rct@methods |> names()
+  mthds <- lapply(mn, as.name)
+  fx <- (\(x, y) lapply(y, \(z) {z <- z; x <- x; substitute(x$z)}))
+  fx(cl, mthds) |> lapply(eval, topenv())
+  lapply(mn, \(m) the[[m]] <- get(m, instance)) |> invisible()
+}
+
 
 useFilled <- function(fill = FALSE, env = the) {
   the$cpp$train = env$train <- if (fill) env$Trainfilled else env$TrainVector
@@ -153,7 +162,7 @@ sim1wt1 <- function(nsubjects, startWeek = 1L) {
 }
 
 # Fill gap weeks with values sampled from non-zero weeks
-fillGaps <- function(x, id0) {
+fillEmptyWeeks <- function(x, id0) {
   zeroIdx <- which(id0 == 0)
   nonZeroVals <- x[-zeroIdx]
   for (i in zeroIdx) {
@@ -181,10 +190,10 @@ logPrint <- \(x) {
 
 
 
-PredCI <- \(nSim = 1e4L, fill_gaps = FALSE, cauchyWt = FALSE) {
+PredCI <- \(nSim = 1e4L, fillGaps = FALSE, cauchyWt = FALSE) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  useFilled(fill_gaps)
-  the$cpp$useCauchy(cauchyWt)
+  useFilled(fillGaps)
+  the$useCauchy(cauchyWt)
   out <- the$cpp$PredCIbyWk(nSim) |> rbind(rep(0, 3), ... = _)
   rownames(out) <- 0:(nrow(out) - 1)
   head(out) |> logPrint();
@@ -192,15 +201,63 @@ PredCI <- \(nSim = 1e4L, fill_gaps = FALSE, cauchyWt = FALSE) {
   invisible(out);
 }
 
+measure <- \(x) {
+  str <- Sys.time(); 
+  x <- substitute(x)
+  eval(x, topenv()) |> invisible()
+  Sys.time() - str
+}
 
 
-# low = high <- gripsIM$ScreenDt[1] |> as.Date()
-# lubridate::year(high) = lubridate::year(high) + 1
-# high = high - 1
-# 
-# ref <- lubridate::year(low) |> paste(... = _, 1, 1, sep = "-") |> as.Date()
-# wks <- (low:high - ref:ref) %/% 7 %% 53 + 1
+notScalar <- \(x) length(x) != 1
+isNotBool <- \(x) !is.logical(x)
+isNotNum <- \(x) !(typeof(x) %in% c("integer", "double"))
+
+argsTests <- list(
+  nSim = \(x) {
+    if (isNotNum(x)) stop(msgList[["nSim"]], call. = FALSE)
+    else if (notScalar(x)) stop('nSim must have length = 1', call. = FALSE)
+    else if (x < 1 || x > 1e4)  stop(msgList[["nSim"]], call. = FALSE)
+  },
+  fillGaps = \(x) {
+    if (isNotBool(x)) stop(msgList[["fillGaps"]])
+    else if (notScalar(x)) stop('fillGaps must have length = 1', call. = FALSE)
+  },
+  cauchyWt = \(x) {
+    if (isNotBool(x)) stop(msgList[["cauchyWt"]])
+    else if (notScalar(x)) stop('cauchyWt must have length = 1', call. = FALSE)
+  },
+  nSub = \(x) {
+    maxN <- sum(the$TrainVector) * 10L 
+    if (isNotNum(x)) stop("nSub must numeric or integer", call. = FALSE)
+    else if (notScalar(x)) stop("nSub must have length = 1", call. = FALSE)
+    else if (x < 1 || x > maxN) 
+      stop(sprintf(msgList[["nSub"]], maxN), call. = FALSE)
+  }
+)
+
+msgList <- list(
+  Load = 'Please, use "LoadData" function to load your data',
+  nSim = 'nSim must be an integer/numeric between 1 and 10,000',
+  fillGaps = 'fillGaps must be TRUE or FALSE',
+  cauchyWt = 'cauchyWt must be TRUE or FALSE',
+  nSub = 'nSub must be between 1 and %s'
+)
 
 
+checkExportedFunctionsArgs <- \() {
+if (is.null(the$TrainVector)) stop(msgList[["Load"]])
+  x <- names(formals(sys.function(sys.parent())))
+  env <- sys.frame(sys.nframe() - 1L)
+  funArgs <- mget(x, env)
+  for (argName in names(funArgs)) {
+    argValue <- funArgs[[argName]]
+    argsTests[[argName]](argValue)
+  }
+}
+
+testArgs <- \(nSim = 1e4L, fillGaps = FALSE, cauchyWt = FALSE) {
+  checkExportedFunctionsArgs()
+}
 
 

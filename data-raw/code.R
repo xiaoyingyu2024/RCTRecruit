@@ -182,9 +182,3 @@ lines(0:52, c(0, target), col = "red", lwd = 2)
 
 
 
-
-
-
-
-
-

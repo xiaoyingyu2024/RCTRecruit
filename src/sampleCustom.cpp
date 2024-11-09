@@ -70,7 +70,6 @@ inline NumericVector quantile(IntegerVector x, NumericVector pq) {
 }
 
 
-using namespace sugar;
 
 class rct {
 public:
@@ -81,31 +80,22 @@ public:
   IntegerVector target;
   IntegerVector cumTarget;
   Environment e;
-  
-  rct(List binom, List cauchy) {
-    for (int i = 0; i < binom.size(); i++) {
-      binom[i] = as<probs_t>(binom[i]);
-      cauchy[i] = as<probs_t>(cauchy[i]);
-    }
-    this->binomWt = binom;
-    this->cauchyWt = cauchy;
-    this->probs = binom;
-  }
-  
+
   rct(Environment _e) {
     this->e = _e;
     train = e["train"];
     List binom = e["binomWt"];
     List cauchy = e["cauchyWt"];
     for (int i = 0; i < binom.size(); i++) {
-      binom[i] = as<probs_t>(binom[i]);
-      cauchy[i] = as<probs_t>(cauchy[i]);
+      binom[i] = as<sugar::probs_t>(binom[i]);
+      cauchy[i] = as<sugar::probs_t>(cauchy[i]);
     }
     this->binomWt = binom;
     this->cauchyWt = cauchy;
-    this->probs = binom;
+    useCauchy(false);
   }
   rct() { }
+  
   
   const static NumericVector pq;
   
@@ -119,12 +109,12 @@ public:
   
   IntegerVector weeks2Nsubjects(int nSim, int nSubjects) {
     IntegerVector y(nSim);
-    const List aek = probs;
+    NumericVector p(52);
     for (int i = 0; i < nSim; i++) {
       int n = 0, k = 0;
       while (n <= nSubjects) {
-        NumericVector p = clone(probs(k % 52).get());
-        n += SampleNoReplace(p, 1, train)(0);
+        p = clone(probs(k % 52).get());
+        n += sugar::SampleNoReplace(p, 1, train)(0);
         k++;
       }
       y(i) = k;
@@ -138,7 +128,7 @@ public:
     colnames(out) = as<CharacterVector>(quantile(y, pq).names());
     for (int i = 0; i < 52; i++) {
       NumericVector p = clone(probs(i).get());
-      y = y + SampleReplace(p, nSim, train);
+      y = y + sugar::SampleReplace(p, nSim, train);
       out.row(i) = quantile(y, pq);
     }
     return out;
@@ -148,7 +138,7 @@ public:
     IntegerVector pred(52);
     for (int i = 0; i < 52; i++) {
       NumericVector p = clone(probs(i).get());
-      pred(i) = SampleNoReplace(p, 1, train)(0);
+      pred(i) = sugar::SampleNoReplace(p, 1, train)(0);
     }
     return pred;
   }
@@ -158,10 +148,10 @@ public:
     for (int k = 0; k < nSim; k++) {
       IntegerVector pred(52);
       NumericVector p = clone(probs(0).get());
-      pred(0) = SampleNoReplace(p, 1, train)(0);
+      pred(0) = sugar::SampleNoReplace(p, 1, train)(0);
       for (int i = 1; i < 52; i++) {
         p = clone(probs(i).get());
-        pred(i) = pred(i - 1) + SampleNoReplace(p, 1, train)(0);
+        pred(i) = pred(i - 1) + sugar::SampleNoReplace(p, 1, train)(0);
       }
       out(k) = sqrt(sum(pow(pred - cumTarget, 2)));
     }
@@ -176,7 +166,6 @@ RCPP_MODULE(mod) {
   class_<rct>("rct")
   .default_constructor()
   .constructor<Environment>()
-  .constructor<List,List>()
   .method("setTarget", &rct::setTarget)
   .method("useCauchy", &rct::useCauchy)
   .method("PredCIbyWk", &rct::PredCIbyWk, "Predictive CI by week")
@@ -185,7 +174,7 @@ RCPP_MODULE(mod) {
   .field("e", &rct::e)
   .field("probs", &rct::probs)
   .field("train", &rct::train, "The train vector")
-  .field("target", &rct::target)
+  .field_readonly("target", &rct::target)
   .field("cumTarget", &rct::cumTarget)
   ;
 }

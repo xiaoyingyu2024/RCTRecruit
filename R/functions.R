@@ -17,10 +17,11 @@ LoadData <- function(data, date, enrolled) {
   the$raw <- data.frame(date, enrolled)
   the$datWeeks <- days2weeks(date, enrolled);
   the$train = the$TrainVector <- the$datWeeks$enrolled
-  the$Trainfilled <- fillGaps(the$TrainVector, the$datWeeks$cnt)
+  the$Trainfilled <- fillEmptyWeeks(the$TrainVector, the$datWeeks$cnt)
   the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)
   the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
-  the$cpp <- new(rct, the);
+  the$cppModule <- new(rct, the);
+  exportModuleMethods(the$cppModule)
   enStr <- fmt(the$enStr, 28, 0, 1)
   dtStr <- fmt(the$dtStr, 28, 0, 1)
   log("\n%s and %s were successfully loaded", enStr, dtStr)
@@ -39,7 +40,7 @@ LoadData <- function(data, date, enrolled) {
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
 #' res <- simAllWt(50L)
-simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
+simAllWt <- function(nSub = 50L, fillGaps = FALSE, nSim = 1e4L, startWK = 1L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
   the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
   weeks <- vapply(seq.int(nSim), function(x) sim1wt1(nSub, startWK), 0L)
@@ -64,9 +65,9 @@ simAllWt <- function(nSub = 50L, fill_gaps = FALSE, nSim = 1e4L, startWK = 1L) {
 #' LoadData(gripsIM, ScreenDt, Enrolled)
 #' target <- days2weeks(gripsYR2$ScreenDt, gripsYR2$Enrolled)$enrolled
 #' res <- simDistance(target)
-simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
+simDistance <- function(target, fillGaps = FALSE, nSim = 1e4L) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
+  the$train <- if (fillGaps) the$Trainfilled else the$TrainVector
   len <- length(the$train)
   if (length(target) < len) stop("target is smaller")
   if (length(target) > len) target <- target[seq.int(len)]
@@ -79,20 +80,21 @@ simDistance <- function(target, fill_gaps = FALSE, nSim = 1e4L) {
 }
 
 #' Function: Calculate median recruitment with CI for the next 52 weeks
-#' @param fill_gaps Whether to fill gaps in the data
+#' @param fillGaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
 #' @return An 52x3 matrix with the 2.5%, 50% and 97.5% percentiles for each week  
 #' @export
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
 #' getWeeksPredCI()
-getWeeksPredCI <- function(nSim = 1e4L, fill_gaps = FALSE) {
+getWeeksPredCI <- \(nSim = 1e4L, fillGaps = FALSE) {
   if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  useFilled(fill_gaps)
-  vec = the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
+  useFilled(fillGaps)
+  vec = the$train <- if (fillGaps) the$Trainfilled else the$TrainVector
   out = PredCIbyWk(the$train, the$probs, nSim, c(0.025, 0.5, 0.975))
   round(do.call(rbind, out))
 }
 
 #' @export
-b <- \(nSim=1e4, nSub=50) the$cpp$weeks2Nsubjects(nSim, nSub)
+weeks2Nsubjects <- \(nSim=1e4, nSub=50) the$weeks2Nsubjects(nSim, nSub)
+
