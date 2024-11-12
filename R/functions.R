@@ -1,4 +1,4 @@
-#' Function: Load recruitment data
+#' Function: Load recruitment dataset
 #' @param data Main dataset
 #' @param date Date column
 #' @param enrolled Enrolled column

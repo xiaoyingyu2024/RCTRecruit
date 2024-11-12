@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{LoadData}
 \alias{LoadData}
-\title{Function: Load recruitment data}
+\title{Function: Load recruitment dataset}
 \usage{
 LoadData(data, date, enrolled)
 }
@@ -14,7 +14,7 @@ LoadData(data, date, enrolled)
 \item{enrolled}{Enrolled column}
 }
 \description{
-Function: Load recruitment data
+Function: Load recruitment dataset
 }
 \examples{
 LoadData(gripsIM, ScreenDt, Enrolled)
