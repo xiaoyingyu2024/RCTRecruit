@@ -8,53 +8,48 @@
 LoadData <- function(data, date, enrolled) {
   if (is.null(data)) stop("data is NULL")
   if (!("data.frame" %in% class(data))) stop("data must be a dataframe")
-  qReg <- "^(\"|\')(.+)(\"|\')$"
-  dataStr <- the$dataStr <- deparse(substitute(data))
-  the$enStr <- deparse(substitute(enrolled)) |> gsub(qReg, "\\2", x = _)
-  the$dtStr <- deparse(substitute(date)) |> gsub(qReg, "\\2", x = _)
-  date <- checkArgs(dataStr, the$dtStr) |> fixDate()
-  enrolled <- checkArgs(dataStr, the$enStr) |> fixEnrolled()
+  cargs <- getCall();
+  date <- checkArgs(date)
+  enrolled <- checkArgs(enrolled)
   the$raw <- data.frame(date, enrolled)
   the$datWeeks <- days2weeks(date, enrolled);
   the$train = the$TrainVector <- the$datWeeks$enrolled
   the$Trainfilled <- fillEmptyWeeks(the$TrainVector, the$datWeeks$cnt)
-  the$TrainVectorN <- stats::setNames(the$TrainVector, the$datWeeks$week)
-  the$TrainfilledN <- stats::setNames(the$Trainfilled, the$datWeeks$week)
-  the$cppModule <- new(rct, the);
+  the$cppModule <- methods::new(rct, the);
   exportModuleMethods(the$cppModule)
-  enStr <- fmt(the$enStr, 28, 0, 1)
-  dtStr <- fmt(the$dtStr, 28, 0, 1)
-  log("\n%s and %s were successfully loaded", enStr, dtStr)
+  LoadSuccess(cargs)
 }
 
 #' Function: Simulate number of weeks needed to recruit a given number of
 #'     subjects
-#' @param nSub Number of subjects to recruit
-#' @param fill_gaps Whether to fill gaps in the data
-#' @param nSim Number of simulations to run
-#' @param startWK The week of the year to start from
+#' @param nSub Number of subjects to recruit (default = 50)
+#' @param nSim Number of simulations to run (default = 1e4)
+#' @param fillGaps Whether to fill gaps in the data (default = FALSE)
+#' @param cauchyWt Whether to use Cauchy weights for sampling (default = FALSE).
+#'    If FALSE, binomial weights are used. 
+#' @param coeff A coefficient to apply to the recruitment rate (default = 1)
 #' @return A list with two elements. The first element `weeks` is an integer
 #'     vector with length equal to `nSim` containing the results of the
 #'     simulation. The second `CI` shows the median and the 95%CI.
 #' @export
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
-#' res <- simAllWt(50L)
-simAllWt <- function(nSub = 50L, fillGaps = FALSE, nSim = 1e4L, startWK = 1L) {
-  if (is.null(the$TrainVector)) stop("TrainVector not loaded")
-  the$train <- if (fill_gaps) the$Trainfilled else the$TrainVector
-  weeks <- vapply(seq.int(nSim), function(x) sim1wt1(nSub, startWK), 0L)
-  CI <- stats::quantile(x = weeks, probs = c(.025, .5, .975))
-  n <- fmt(nSub, 28, 0, 1)
-  m <- fmt(CI[[2L]], 28, 0, 1)
-  log("Enrolling %s subjects requires %s weeks\n\n", n, m)
-  print(round(CI))
-  invisible(list(weeks = weeks, CI = CI))
+#' res <- time2Nsubjects()
+time2Nsubjects <- \(nSub = 50, nSim = 1e4, fillGaps = FALSE, cauchyWt = FALSE,
+                    coeff = 1) {
+  checkExportedFunctionsArgs()
+  useFilled(fillGaps)
+  the$useCauchy(cauchyWt)
+  applyCoeff(coeff)
+  out <- the$weeks2Nsubjects(nSim, nSub)
+  log(msgL$enrollWeeks, bold(nSub, 28), bold(out$CI[[2L]], 28))
+  print(round(out$CI))
+  invisible(out)
 }
 #' Function: Calculate CI of Euclidean distance of predicted recruitment with
 #'     actual recruitment
 #' @param target A vector with the actual recruitment by week
-#' @param fill_gaps Whether to fill gaps in the data
+#' @param fillGaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
 #' @return A list with two elements. The first element `dist` is a numeric
 #'     vector with length equal to `nSim` containing the simulated Euclidean
@@ -80,21 +75,27 @@ simDistance <- function(target, fillGaps = FALSE, nSim = 1e4L) {
 }
 
 #' Function: Calculate median recruitment with CI for the next 52 weeks
-#' @param fillGaps Whether to fill gaps in the data
 #' @param nSim Number of simulations to run
+#' @param fillGaps Whether to fill gaps in the data
+#' @param cauchyWt Whether to use Cauchy weights for sampling (default = FALSE).
+#'    If FALSE, binomial weights are used. 
+#' @param coeff A coefficient to apply to the recruitment rate (default = 1)
 #' @return An 52x3 matrix with the 2.5%, 50% and 97.5% percentiles for each week  
 #' @export
 #' @examples
 #' LoadData(gripsIM, ScreenDt, Enrolled)
 #' getWeeksPredCI()
-getWeeksPredCI <- \(nSim = 1e4L, fillGaps = FALSE) {
-  if (is.null(the$TrainVector)) stop("TrainVector not loaded")
+getWeeksPredCI <- \(nSim = 1e4L, fillGaps = FALSE, cauchyWt = FALSE, coeff = 1) {
+  checkExportedFunctionsArgs()
   useFilled(fillGaps)
-  vec = the$train <- if (fillGaps) the$Trainfilled else the$TrainVector
-  out = PredCIbyWk(the$train, the$probs, nSim, c(0.025, 0.5, 0.975))
-  round(do.call(rbind, out))
+  the$useCauchy(cauchyWt)
+  applyCoeff(coeff)
+  out <- the$PredCIbyWk(nSim) |> rbind(rep(0, 3), ... = _)
+  rownames(out) <- 0:(nrow(out) - 1)
+  utils::head(out) |> logPrint();
+  utils::tail(out) |> logPrint();
+  invisible(out);
 }
 
-#' @export
-weeks2Nsubjects <- \(nSim=1e4, nSub=50) the$weeks2Nsubjects(nSim, nSub)
+
 

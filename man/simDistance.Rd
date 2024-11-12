@@ -5,12 +5,12 @@
 \title{Function: Calculate CI of Euclidean distance of predicted recruitment with
 actual recruitment}
 \usage{
-simDistance(target, fill_gaps = FALSE, nSim = 10000L)
+simDistance(target, fillGaps = FALSE, nSim = 10000L)
 }
 \arguments{
 \item{target}{A vector with the actual recruitment by week}
 
-\item{fill_gaps}{Whether to fill gaps in the data}
+\item{fillGaps}{Whether to fill gaps in the data}
 
 \item{nSim}{Number of simulations to run}
 }

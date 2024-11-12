@@ -166,19 +166,57 @@ sel <- function(trained, drop = FALSE) {
 target <- days2weeks(gripsYR2$ScreenDt, gripsYR2$Enrolled)$enrolled |> cumsum()
 
 
+y <- PredCI(nSim = 1e4, fillGaps = F, cauchyWt = T)
 x <- 0:52;
 len <- length(x)
 xs <- c(x, x[len], rev(x[-len]))
-ys <- c(bn[, 3], bn[len, 1], rev(bn[-len, 1]))
+ys <- c(y[, 3], y[len, 1], rev(y[-len, 1]))
 
-par(fin = c(6, 6), las = 1, cex.axis = 1.2);
-plot(0:52, c(0, target), type = "n", asp = 1, xlab = "Weeks", ylab = "Subjects")
+par(fin = c(6, 6), las = 1, cex.axis = 1.2, cex.lab = 1.2);
+plot(x, c(0, target), type = "n", asp = 1, xlab = "Weeks", ylab = "Subjects")
 polygon(xs, ys, col = "gray90", border = "gray90")
 abline(v = seq(0, 50, by = 5), h = seq(0, 40, by = 10), col = "gray70")
-lines(0:52, bn[, 2], lwd = 2)
-lines(0:52, c(0, cumsum(the$TrainVector)), col = "blue", lwd = 2)
-lines(0:52, c(0, target), col = "red", lwd = 2)
+lines(x, y[, 2], lwd = 2)
+lines(x, c(0, cumsum(the$TrainVector)), col = "blue", lwd = 2)
+lines(x, c(0, target), col = "red", lwd = 2)
 
+
+
+predPlot <- R6::R6Class("predPlot", 
+  public = list(
+    env = NULL,
+    initialize = function(env) {self$env <- env},
+    plot = function(y) {
+      oldPar <- par(no.readonly = TRUE)
+      y <- y |> as.data.frame() |> setNames(c("low", "pred", "high"))
+      x <- 0:52;
+      train <- c(0, cumsum(self$env$TrainVector))
+      len <- length(x)
+      xs <- c(x, x[len], rev(x[-len]))
+      ys <- c(y$high, y$low[len], rev(y$low[-len]))
+      target <- c(0, days2weeks(gripsYR2[[1]], gripsYR2[[2]])$enrolled |> cumsum())
+      lns <- list(train, target, y$high);
+      maxY <- sapply(lns, max);a
+      id <- which.max(maxY)
+      maxY <- maxY[id]
+      par(fin = c(6, 6), las = 1, cex.axis = 1.2, cex.lab = 1.2);
+      plot(x, lns[[id]], type = "n", xlab = "Weeks", ylab = "Subjects")
+      polygon(xs, ys, col = "gray90", border = "gray90")
+      abline(v = seq(0, 50, by = 5), h = seq(0, maxY + 5, by = 10), col = "gray70")
+      lines(x, y[, 2], lwd = 2)
+      lines(x, train, col = "blue", lwd = 2)
+      lines(x, target, col = "red", lwd = 2)
+      do.call(par, oldPar)
+    }
+  )
+)
+
+
+a <- predPlot$new(the)
+
+refill()
+y <- getWeeksPredCI(fillGaps = T, cauchyWt = F, coeff = 1.5)
+a$plot(y)
 
 
 

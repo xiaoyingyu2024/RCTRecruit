@@ -60,7 +60,7 @@ List PredCIbyWk(IntegerVector x, List probs, int nSim, NumericVector pq) {
 }
 
 
-inline NumericVector quantile(IntegerVector x, NumericVector pq) {
+inline NumericVector quantile(NumericVector x, NumericVector pq) {
   Environment stats("package:stats");
   Function qntl = stats["quantile"];
   int npr = pq.size();
@@ -76,9 +76,9 @@ public:
   List probs;
   List binomWt;
   List cauchyWt;
-  IntegerVector train;
-  IntegerVector target;
-  IntegerVector cumTarget;
+  NumericVector train;
+  NumericVector target;
+  NumericVector cumTarget;
   Environment e;
 
   rct(Environment _e) {
@@ -100,18 +100,19 @@ public:
   const static NumericVector pq;
   
   void setTarget(NumericVector _target) {
-    this->target = as<IntegerVector>(_target);
+    this->target = as<NumericVector>(_target);
     NumericVector _cumTarget = cumsum(_target);
-    this->cumTarget = as<IntegerVector>(_cumTarget);
+    this->cumTarget = as<NumericVector>(_cumTarget);
   }
   
   void useCauchy(bool val) { probs = val ? cauchyWt : binomWt; }
   
-  IntegerVector weeks2Nsubjects(int nSim, int nSubjects) {
-    IntegerVector y(nSim);
+  List weeks2Nsubjects(int nSim, int nSubjects) {
+    NumericVector y(nSim);
     NumericVector p(52);
     for (int i = 0; i < nSim; i++) {
-      int n = 0, k = 0;
+      double n = 0; 
+      int k = 0;
       while (n <= nSubjects) {
         p = clone(probs(k % 52).get());
         n += sugar::SampleNoReplace(p, 1, train)(0);
@@ -119,11 +120,12 @@ public:
       }
       y(i) = k;
     }
-    return y;
+    List L = List::create(_["weeks"] = y, _["CI"] = quantile(y, pq));
+    return L;
   }
 
   NumericMatrix PredCIbyWk(int nSim) {
-    IntegerVector y(nSim);
+    NumericVector y(nSim);
     NumericMatrix out(52, 3);
     colnames(out) = as<CharacterVector>(quantile(y, pq).names());
     for (int i = 0; i < 52; i++) {
@@ -134,8 +136,8 @@ public:
     return out;
   }
   
-  IntegerVector getPredVec() {
-    IntegerVector pred(52);
+  NumericVector getPredVec() {
+    NumericVector pred(52);
     for (int i = 0; i < 52; i++) {
       NumericVector p = clone(probs(i).get());
       pred(i) = sugar::SampleNoReplace(p, 1, train)(0);
@@ -146,7 +148,7 @@ public:
   NumericVector getDistance(int nSim) {
     NumericVector out(nSim);
     for (int k = 0; k < nSim; k++) {
-      IntegerVector pred(52);
+      NumericVector pred(52);
       NumericVector p = clone(probs(0).get());
       pred(0) = sugar::SampleNoReplace(p, 1, train)(0);
       for (int i = 1; i < 52; i++) {

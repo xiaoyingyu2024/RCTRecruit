@@ -4,12 +4,17 @@
 \alias{getWeeksPredCI}
 \title{Function: Calculate median recruitment with CI for the next 52 weeks}
 \usage{
-getWeeksPredCI(nSim = 10000L, fill_gaps = FALSE)
+getWeeksPredCI(nSim = 10000L, fillGaps = FALSE, cauchyWt = FALSE, coeff = 1)
 }
 \arguments{
 \item{nSim}{Number of simulations to run}
 
-\item{fill_gaps}{Whether to fill gaps in the data}
+\item{fillGaps}{Whether to fill gaps in the data}
+
+\item{cauchyWt}{Whether to use Cauchy weights for sampling (default = FALSE).
+If FALSE, binomial weights are used.}
+
+\item{coeff}{A coefficient to apply to the recruitment rate (default = 1)}
 }
 \value{
 An 52x3 matrix with the 2.5\%, 50\% and 97.5\% percentiles for each week
